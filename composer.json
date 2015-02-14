@@ -1,0 +1,19 @@
+{
+    "name": "codelint/php-lang",
+    "description": "the function enhance for php language",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "codelint",
+            "email": "codelint@foxmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+    "autoload": {
+        "psr-0": {"Codelint\\": "src/"},
+        "files": [
+            "src/Codelint/Lang/helper.php",
+        ]
+    }
+}

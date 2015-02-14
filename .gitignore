@@ -1,0 +1,8 @@
+/vendor/
+/.idea/
+phpinfo.php
+.DS_Store
+*.bz2
+*.gz
+/demo/config.php
+/wx/
