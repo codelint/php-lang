@@ -52,3 +52,5 @@ the helper to enhance php language
 - function_exists('m_decrypt'))
 - function_exists('http_post_data'))
 - function_exists('array_weight'))
+
+

@@ -9,11 +9,11 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
     "autoload": {
         "psr-0": {"Codelint\\": "src/"},
         "files": [
-            "src/Codelint/Lang/helper.php",
+            "src/Codelint/Lang/helper.php"
         ]
     }
 }
