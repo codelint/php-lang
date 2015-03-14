@@ -81,7 +81,8 @@ if (!function_exists('array_dot'))
             if (is_array($value))
             {
                 $results = array_merge($results, array_dot($value, $prepend . $key . '.'));
-            } else
+            }
+            else
             {
                 $results[$prepend . $key] = $value;
             }
@@ -190,7 +191,8 @@ if (!function_exists('array_flatten'))
             if (empty($ukey))
             {
                 $return[] = $v;
-            } else
+            }
+            else
             {
                 if ($ukey == $k)
                 {
@@ -332,7 +334,8 @@ if (!function_exists('array_pluck'))
             if (is_null($key))
             {
                 $results[] = $itemValue;
-            } else
+            }
+            else
             {
                 $itemKey = is_object($item) ? $item->{$key} : $item[$key];
 
@@ -457,10 +460,12 @@ if (!function_exists('data_get'))
         if (is_array($target))
         {
             return array_get($target, $key, $default);
-        } elseif (is_object($target))
+        }
+        elseif (is_object($target))
         {
             return object_get($target, $key, $default);
-        } else
+        }
+        else
         {
             throw new \InvalidArgumentException("Array or object must be passed to data_get.");
         }
@@ -881,14 +886,20 @@ if (!function_exists('xmlToArray'))
 {
     function xmlToArray($xmlObj)
     {
-        $output = array();
-        foreach ((array)$xmlObj as $index => $node)
+        if (is_string($xmlObj))
         {
-            $output[$index] = (is_object($node)) ? xmlToArray($node) : $node;
+            return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         }
-        return $output;
+        else
+        {
+            $output = array();
+            foreach ((array)$xmlObj as $index => $node)
+            {
+                $output[$index] = (is_object($node)) ? xmlToArray($node) : $node;
+            }
+            return $output;
+        }
     }
-
 }
 
 if (!function_exists('array_sort_by'))
@@ -985,16 +996,17 @@ if (!function_exists('m_decrypt'))
     }
 }
 
-if(!function_exists('http_post_data'))
+if (!function_exists('http_post_data'))
 {
-    function http_post_data($url, $data_string) {
+    function http_post_data($url, $data_string)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json; charset=utf-8',
-            'Content-Length: ' . strlen($data_string))
+                'Content-Type: application/json; charset=utf-8',
+                'Content-Length: ' . strlen($data_string))
         );
         ob_start();
         curl_exec($ch);
