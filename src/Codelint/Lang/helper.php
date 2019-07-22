@@ -457,6 +457,10 @@ if (!function_exists('data_get'))
      */
     function data_get($target, $key, $default = null)
     {
+        if(is_array($key))
+        {
+            $key = implode('.', $key);
+        }
         if (is_array($target))
         {
             return array_get($target, $key, $default);
