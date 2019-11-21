@@ -1,5 +1,7 @@
 <?php
 
+use ArrayAccess;
+
 /**
  * helper function:
  * @date 14-3-29
@@ -444,6 +446,31 @@ if (!function_exists('class_basename'))
     }
 }
 
+if (!function_exists('array_collapse'))
+{
+    function array_collapse($array)
+    {
+        $results = [];
+
+        foreach ($array as $values)
+        {
+            if (class_basename($values) == 'Collection')
+            {
+                $values = $values->all();
+            }
+            elseif (!is_array($values))
+            {
+                continue;
+            }
+
+            $results[] = $values;
+        }
+
+        return array_merge([], ...$results);
+    }
+}
+
+
 if (!function_exists('data_get'))
 {
     /**
@@ -457,22 +484,52 @@ if (!function_exists('data_get'))
      */
     function data_get($target, $key, $default = null)
     {
-        if(is_array($key))
+        if (is_null($key))
         {
-            $key = implode('.', $key);
+            return $target;
         }
-        if (is_array($target))
+
+        $key = is_array($key) ? $key : explode('.', $key);
+
+        while (!is_null($segment = array_shift($key)))
         {
-            return array_get($target, $key, $default);
+            if ($segment === '*')
+            {
+                if (class_basename($target) == 'Collection')
+                {
+                    $target = $target->all();
+                }
+                elseif (!is_array($target))
+                {
+                    return value($default);
+                }
+
+                $result = [];
+
+                foreach ($target as $item)
+                {
+                    $result[] = data_get($item, $key);
+                }
+
+                return in_array('*', $key) ? array_collapse($result) : $result;
+            }
+
+            if ((is_array($target) || $target instanceof ArrayAccess)
+                && (($target instanceof ArrayAccess && $target->offsetExists($segment)) || array_key_exists($segment, $target)))
+            {
+                $target = $target[$segment];
+            }
+            elseif (is_object($target) && isset($target->{$segment}))
+            {
+                $target = $target->{$segment};
+            }
+            else
+            {
+                return value($default);
+            }
         }
-        elseif (is_object($target))
-        {
-            return object_get($target, $key, $default);
-        }
-        else
-        {
-            throw new \InvalidArgumentException("Array or object must be passed to data_get.");
-        }
+
+        return $target;
     }
 }
 
