@@ -1,6 +1,6 @@
 <?php
 
-use ArrayAccess;
+use ArrayAccess as ArrayInterface;
 
 /**
  * helper function:
@@ -514,8 +514,8 @@ if (!function_exists('data_get'))
                 return in_array('*', $key) ? array_collapse($result) : $result;
             }
 
-            if ((is_array($target) || $target instanceof ArrayAccess)
-                && (($target instanceof ArrayAccess && $target->offsetExists($segment)) || array_key_exists($segment, $target)))
+            if ((is_array($target) || $target instanceof ArrayInterface)
+                && (($target instanceof ArrayInterface && $target->offsetExists($segment)) || array_key_exists($segment, $target)))
             {
                 $target = $target[$segment];
             }
